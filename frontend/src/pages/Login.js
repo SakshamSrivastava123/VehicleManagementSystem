@@ -16,7 +16,7 @@ export default function Login() {
   const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true);
-    try {
+    try { 
       if (isLogin) {
         await login(form.email, form.password);
       } else {

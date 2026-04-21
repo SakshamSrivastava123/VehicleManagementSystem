@@ -60,7 +60,7 @@ export default function Trips() {
           <h1 className="page-title">Trips</h1>
           <p className="page-subtitle">{trips.length} trips recorded</p>
         </div>
-        <button className="btn btn-primary" onClick={openAdd}>+ Create Trip</button>
+        <button className="btn btn-primary" onClick={openAdd}>+ Add Trip</button>
       </div>
 
       <div className="filter-bar">
@@ -112,7 +112,7 @@ export default function Trips() {
         <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setModal(false)}>
           <div className="modal">
             <div className="modal-header">
-              <h2>{editing ? '✏️ Edit Trip' : '📍 Create Trip'}</h2>
+              <h2>{editing ? '✏️ Edit Trip' : '📍 Add Trip'}</h2>
               <button className="modal-close" onClick={() => setModal(false)}>✕</button>
             </div>
             <form onSubmit={handleSave}>
@@ -174,7 +174,7 @@ export default function Trips() {
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={() => setModal(false)}>Cancel</button>
-                <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Saving...' : editing ? 'Update' : 'Create Trip'}</button>
+                <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Saving...' : editing ? 'Update' : 'Add Trip'}</button>
               </div>
             </form>
           </div>
