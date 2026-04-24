@@ -66,3 +66,41 @@ it("opens add modal", async () => {
 
   expect(screen.getByText("📍 Add Trip")).toBeInTheDocument();
 });
+
+it("creates a new trip", async () => {
+  tripAPI.getAll.mockResolvedValue({ data: [] });
+  vehicleAPI.getAll.mockResolvedValue({ data: mockVehicles });
+  driverAPI.getAll.mockResolvedValue({ data: mockDrivers });
+  tripAPI.create.mockResolvedValue({});
+
+  render(<Trips />);
+
+  await waitFor(() => screen.getByText("+ Add Trip"));
+
+  fireEvent.click(screen.getByText("+ Add Trip"));
+
+  const selects = screen.getAllByRole("combobox");
+
+  fireEvent.change(selects[0], { target: { value: "v1" } });
+  fireEvent.change(selects[1], { target: { value: "d1" } });
+
+  fireEvent.change(screen.getByPlaceholderText("Mumbai"), {
+    target: { value: "Delhi" },
+  });
+
+  fireEvent.change(screen.getByPlaceholderText("Pune"), {
+    target: { value: "Noida" },
+  });
+
+ 
+  const buttons = screen.getAllByRole("button", { name: /add trip/i });
+
+// buttons[0] → header button
+// buttons[1] → modal submit button
+
+fireEvent.click(buttons[1]); // open modal
+
+  await waitFor(() => {
+    expect(tripAPI.create).toHaveBeenCalled();
+  });
+});
