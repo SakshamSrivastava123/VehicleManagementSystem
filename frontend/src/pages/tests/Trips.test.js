@@ -95,12 +95,31 @@ it("creates a new trip", async () => {
  
   const buttons = screen.getAllByRole("button", { name: /add trip/i });
 
-// buttons[0] → header button
-// buttons[1] → modal submit button
 
 fireEvent.click(buttons[1]); // open modal
 
   await waitFor(() => {
     expect(tripAPI.create).toHaveBeenCalled();
+  });
+});
+
+it("opens edit modal and updates trip", async () => {
+  tripAPI.getAll.mockResolvedValue({ data: mockTrips });
+  vehicleAPI.getAll.mockResolvedValue({ data: mockVehicles });
+  driverAPI.getAll.mockResolvedValue({ data: mockDrivers });
+  tripAPI.update.mockResolvedValue({});
+
+  render(<Trips />);
+
+  await waitFor(() => screen.getByText("Delhi"));
+
+  fireEvent.click(screen.getByText("Edit"));
+
+  expect(screen.getByText("✏️ Edit Trip")).toBeInTheDocument();
+
+  fireEvent.submit(screen.getByRole("button", { name: /Update/i }));
+
+  await waitFor(() => {
+    expect(tripAPI.update).toHaveBeenCalled();
   });
 });
