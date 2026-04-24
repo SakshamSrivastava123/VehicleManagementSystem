@@ -50,3 +50,19 @@ it("shows error when fetch fails", async () => {
     expect(toast.error).toHaveBeenCalledWith("Failed to fetch");
   });
 });
+
+
+
+it("opens add modal", async () => {
+  tripAPI.getAll.mockResolvedValue({ data: [] });
+  vehicleAPI.getAll.mockResolvedValue({ data: mockVehicles });
+  driverAPI.getAll.mockResolvedValue({ data: mockDrivers });
+
+  render(<Trips />);
+
+  await waitFor(() => screen.getByText("+ Add Trip"));
+
+  fireEvent.click(screen.getByText("+ Add Trip"));
+
+  expect(screen.getByText("📍 Add Trip")).toBeInTheDocument();
+});
