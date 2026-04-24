@@ -38,3 +38,15 @@ it("fetches trips on mount", async () => {
   });
 
 });
+
+it("shows error when fetch fails", async () => {
+  tripAPI.getAll.mockRejectedValue(new Error("fail"));
+  vehicleAPI.getAll.mockResolvedValue({ data: [] });
+  driverAPI.getAll.mockResolvedValue({ data: [] });
+
+  render(<Trips />);
+
+  await waitFor(() => {
+    expect(toast.error).toHaveBeenCalledWith("Failed to fetch");
+  });
+});
