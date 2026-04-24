@@ -143,3 +143,19 @@ it("deletes a trip", async () => {
     expect(toast.success).toHaveBeenCalledWith("Deleted");
   });
 });
+
+it("filters trips by status", async () => {
+  tripAPI.getAll.mockResolvedValue({ data: [] });
+  vehicleAPI.getAll.mockResolvedValue({ data: [] });
+  driverAPI.getAll.mockResolvedValue({ data: [] });
+
+  render(<Trips />);
+
+  fireEvent.change(screen.getByRole("combobox"), {
+    target: { value: "completed" },
+  });
+
+  await waitFor(() => {
+    expect(tripAPI.getAll).toHaveBeenCalledWith({ status: "completed" });
+  });
+});
