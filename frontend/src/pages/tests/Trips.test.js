@@ -123,3 +123,23 @@ it("opens edit modal and updates trip", async () => {
     expect(tripAPI.update).toHaveBeenCalled();
   });
 });
+
+it("deletes a trip", async () => {
+  window.confirm = jest.fn(() => true);
+
+  tripAPI.getAll.mockResolvedValue({ data: mockTrips });
+  vehicleAPI.getAll.mockResolvedValue({ data: mockVehicles });
+  driverAPI.getAll.mockResolvedValue({ data: mockDrivers });
+  tripAPI.delete.mockResolvedValue({});
+
+  render(<Trips />);
+
+  await waitFor(() => screen.getByText("Delhi"));
+
+  fireEvent.click(screen.getByText("Del"));
+
+  await waitFor(() => {
+    expect(tripAPI.delete).toHaveBeenCalledWith("1");
+    expect(toast.success).toHaveBeenCalledWith("Deleted");
+  });
+});
