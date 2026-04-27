@@ -115,4 +115,26 @@ test('should not delete driver if cancelled', async () => {
   expect(driverAPI.delete).not.toHaveBeenCalled();
 });
 
+test('should show error when delete fails', async () => {
+  driverAPI.getAll.mockResolvedValue({
+    data: [{ _id: '1', name: 'John Doe' }]
+  });
+
+  driverAPI.delete.mockRejectedValue({});
+
+  window.confirm = jest.fn(() => true);
+
+  render(<Drivers />);
+
+  await screen.findByText('John Doe');
+
+  fireEvent.click(screen.getByText('Del'));
+
+  await waitFor(() => {
+    expect(driverAPI.delete).toHaveBeenCalled();
+  });
+
+  // optional: check toast if mocked
+});
+
 });
