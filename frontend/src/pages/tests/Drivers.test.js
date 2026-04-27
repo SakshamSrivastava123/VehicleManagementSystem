@@ -98,4 +98,21 @@ describe('Add Driver - Unit Test', () => {
     expect(driverAPI.delete).toHaveBeenCalledWith('1');
   });
 });
+
+test('should not delete driver if cancelled', async () => {
+  driverAPI.getAll.mockResolvedValue({
+    data: [{ _id: '1', name: 'John Doe' }]
+  });
+
+  window.confirm = jest.fn(() => false);
+
+  render(<Drivers />);
+
+  await screen.findByText('John Doe');
+
+  fireEvent.click(screen.getByText('Del'));
+
+  expect(driverAPI.delete).not.toHaveBeenCalled();
+});
+
 });
