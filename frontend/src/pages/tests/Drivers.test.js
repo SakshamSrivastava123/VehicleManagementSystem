@@ -74,4 +74,28 @@ describe('Add Driver - Unit Test', () => {
       );
     });
   });
+
+
+  test('should delete driver when confirmed', async () => {
+  driverAPI.getAll.mockResolvedValue({
+    data: [{ _id: '1', name: 'John Doe', phone: '123', email: 'a@test.com' }]
+  });
+
+  driverAPI.delete.mockResolvedValue({});
+
+  // mock confirm = true
+  window.confirm = jest.fn(() => true);
+
+  render(<Drivers />);
+
+  // wait for row
+  await screen.findByText('John Doe');
+
+  // click delete
+  fireEvent.click(screen.getByText('Del'));
+
+  await waitFor(() => {
+    expect(driverAPI.delete).toHaveBeenCalledWith('1');
+  });
+});
 });
