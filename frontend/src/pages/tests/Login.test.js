@@ -125,3 +125,24 @@ fireEvent.click(buttons[1]);
     expect(toast.error).toHaveBeenCalledWith('Invalid credentials');
   });
 });
+test('should show loading state', async () => {
+  mockLogin.mockImplementation(() => new Promise(() => {})); // never resolves
+
+  render(<Login />);
+
+  fireEvent.change(screen.getByPlaceholderText('you@example.com'), {
+    target: { value: 'test@mail.com' },
+  });
+
+  fireEvent.change(screen.getByPlaceholderText('••••••••'), {
+    target: { value: '123456' },
+  });
+
+
+ const buttons = screen.getAllByRole('button', { name: /sign in/i });
+
+// index 1 = submit button
+fireEvent.click(buttons[1]);
+
+  expect(screen.getByText(/please wait/i)).toBeInTheDocument();
+});
