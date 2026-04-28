@@ -59,3 +59,42 @@ test('should switch to register mode', () => {
 
   expect(screen.getByPlaceholderText('John Doe')).toBeInTheDocument();
 });
+
+
+test('should register successfully', async () => {
+  mockRegister.mockResolvedValue({});
+
+  render(<Login />);
+
+  // switch to register
+  fireEvent.click(screen.getByText('Register'));
+
+  fireEvent.change(screen.getByPlaceholderText('John Doe'), {
+    target: { value: 'Saksham' },
+  });
+
+  fireEvent.change(screen.getByPlaceholderText('you@example.com'), {
+    target: { value: 'test@mail.com' },
+  });
+
+  fireEvent.change(screen.getByPlaceholderText('••••••••'), {
+    target: { value: '123456' },
+  });
+
+  fireEvent.change(screen.getByDisplayValue('Manager'), {
+    target: { value: 'admin' },
+  });
+
+  fireEvent.click(screen.getByRole('button', { name: /create account/i }));
+
+  await waitFor(() => {
+    expect(mockRegister).toHaveBeenCalledWith(
+      'Saksham',
+      'test@mail.com',
+      '123456',
+      'admin'
+    );
+  });
+
+  expect(mockNavigate).toHaveBeenCalledWith('/');
+});
