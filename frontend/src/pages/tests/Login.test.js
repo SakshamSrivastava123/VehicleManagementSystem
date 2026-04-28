@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Login from '../Login';
 import { useAuth } from '../../context/AuthContext';
-
+import '@testing-library/jest-dom';
 // mock navigate
 const mockNavigate = jest.fn();
 
@@ -50,4 +50,12 @@ fireEvent.click(buttons[1]);
   });
 
   expect(mockNavigate).toHaveBeenCalledWith('/');
+});
+
+test('should switch to register mode', () => {
+  render(<Login />);
+
+  fireEvent.click(screen.getByText('Register'));
+
+  expect(screen.getByPlaceholderText('John Doe')).toBeInTheDocument();
 });
