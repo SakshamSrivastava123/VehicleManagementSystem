@@ -98,3 +98,30 @@ test('should register successfully', async () => {
 
   expect(mockNavigate).toHaveBeenCalledWith('/');
 });
+
+import { toast } from 'react-toastify';
+
+test('should show error on login failure', async () => {
+  mockLogin.mockRejectedValue({
+    response: { data: { message: 'Invalid credentials' } },
+  });
+
+  render(<Login />);
+
+  fireEvent.change(screen.getByPlaceholderText('you@example.com'), {
+    target: { value: 'wrong@mail.com' },
+  });
+
+  fireEvent.change(screen.getByPlaceholderText('••••••••'), {
+    target: { value: 'wrong' },
+  });
+
+ const buttons = screen.getAllByRole('button', { name: /sign in/i });
+
+// index 1 = submit button
+fireEvent.click(buttons[1]);
+
+  await waitFor(() => {
+    expect(toast.error).toHaveBeenCalledWith('Invalid credentials');
+  });
+});
