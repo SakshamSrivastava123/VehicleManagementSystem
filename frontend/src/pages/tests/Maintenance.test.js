@@ -88,3 +88,23 @@ test('should update maintenance record', async () => {
     expect(maintenanceAPI.update).toHaveBeenCalled();
   });
 });
+
+
+test('should delete record when confirmed', async () => {
+  maintenanceAPI.getAll.mockResolvedValue({
+    data: [{ _id: '1', description: 'Test' }],
+  });
+
+  vehicleAPI.getAll.mockResolvedValue({ data: [] });
+  maintenanceAPI.delete.mockResolvedValue({});
+
+  window.confirm = jest.fn(() => true);
+
+  render(<Maintenance />);
+
+  fireEvent.click(await screen.findByText('Del'));
+
+  await waitFor(() => {
+    expect(maintenanceAPI.delete).toHaveBeenCalledWith('1');
+  });
+});
