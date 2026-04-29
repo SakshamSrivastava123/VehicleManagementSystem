@@ -2,7 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Maintenance from '../Maintenance';
 import { maintenanceAPI, vehicleAPI } from '../../utils/api';
 import { toast } from 'react-toastify';
-
+import '@testing-library/jest-dom';
 jest.mock('../../utils/api', () => ({
   maintenanceAPI: {
     getAll: jest.fn(),
@@ -38,4 +38,22 @@ test('should open add modal', async () => {
 
   render(<Maintenance />);
 
+});
+
+
+test('should open add maintenance modal', async () => {
+  maintenanceAPI.getAll.mockResolvedValue({ data: [] });
+  vehicleAPI.getAll.mockResolvedValue({ data: [] });
+
+  render(<Maintenance />);
+
+  // Click button using role
+  fireEvent.click(
+    screen.getByRole('button', { name: /\+ log maintenance/i })
+  );
+
+  // Modal heading
+  expect(
+    screen.getByRole('heading', { name: /log maintenance/i })
+  ).toBeInTheDocument();
 });
