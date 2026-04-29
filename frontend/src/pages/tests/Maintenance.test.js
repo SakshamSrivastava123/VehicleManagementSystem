@@ -125,3 +125,13 @@ test('should not delete if cancelled', async () => {
 
   expect(maintenanceAPI.delete).not.toHaveBeenCalled();
 });
+test('should show error if fetch fails', async () => {
+  maintenanceAPI.getAll.mockRejectedValue({});
+  vehicleAPI.getAll.mockRejectedValue({});
+
+  render(<Maintenance />);
+
+  await waitFor(() => {
+    expect(toast.error).toHaveBeenCalledWith('Failed to fetch');
+  });
+});
