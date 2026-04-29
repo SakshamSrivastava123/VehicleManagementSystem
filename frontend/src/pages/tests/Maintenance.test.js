@@ -57,3 +57,34 @@ test('should open add maintenance modal', async () => {
     screen.getByRole('heading', { name: /log maintenance/i })
   ).toBeInTheDocument();
 });
+
+
+test('should update maintenance record', async () => {
+  maintenanceAPI.getAll.mockResolvedValue({
+    data: [{
+      _id: '1',
+      description: 'Old',
+      vehicle: { _id: '1', registrationNumber: 'ABC' },
+      serviceDate: '2024-01-01',
+      cost: 1000,
+    }],
+  });
+
+  vehicleAPI.getAll.mockResolvedValue({ data: [] });
+
+  maintenanceAPI.update.mockResolvedValue({});
+
+  render(<Maintenance />);
+
+  fireEvent.click(await screen.findByText('Edit'));
+
+  fireEvent.change(screen.getByDisplayValue('Old'), {
+    target: { value: 'Updated' },
+  });
+
+  fireEvent.click(screen.getByRole('button', { name: /update/i }));
+
+  await waitFor(() => {
+    expect(maintenanceAPI.update).toHaveBeenCalled();
+  });
+});
