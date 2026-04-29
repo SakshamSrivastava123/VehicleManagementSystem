@@ -32,3 +32,10 @@ test('should fetch maintenance and vehicles on load', async () => {
     expect(vehicleAPI.getAll).toHaveBeenCalled();
   });
 });
+test('should open add modal', async () => {
+  maintenanceAPI.getAll.mockResolvedValue({ data: [] });
+  vehicleAPI.getAll.mockResolvedValue({ data: [] });
+
+  render(<Maintenance />);
+
+});
