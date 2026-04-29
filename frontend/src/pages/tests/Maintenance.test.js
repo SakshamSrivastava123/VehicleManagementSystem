@@ -108,3 +108,20 @@ test('should delete record when confirmed', async () => {
     expect(maintenanceAPI.delete).toHaveBeenCalledWith('1');
   });
 });
+
+
+test('should not delete if cancelled', async () => {
+  maintenanceAPI.getAll.mockResolvedValue({
+    data: [{ _id: '1', description: 'Test' }],
+  });
+
+  vehicleAPI.getAll.mockResolvedValue({ data: [] });
+
+  window.confirm = jest.fn(() => false);
+
+  render(<Maintenance />);
+
+  fireEvent.click(await screen.findByText('Del'));
+
+  expect(maintenanceAPI.delete).not.toHaveBeenCalled();
+});
