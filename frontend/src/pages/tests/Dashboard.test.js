@@ -20,3 +20,35 @@ test('should show loading initially', () => {
 
   expect(screen.getByText(/loading dashboard/i)).toBeInTheDocument();
 });
+
+test('should render dashboard stats correctly', async () => {
+  vehicleAPI.getStats.mockResolvedValue({
+    data: { total: 10, active: 8, maintenance: 2, inactive: 2 },
+  });
+
+  driverAPI.getStats.mockResolvedValue({
+    data: { total: 5, available: 3, onTrip: 2, offDuty: 1 },
+  });
+
+  tripAPI.getStats.mockResolvedValue({
+    data: { total: 20, completed: 15, totalDistance: 1000, totalFuelCost: 5000 },
+  });
+
+  tripAPI.getAll.mockResolvedValue({
+    data: [],
+  });
+
+  maintenanceAPI.getAll.mockResolvedValue({
+    data: [],
+  });
+
+  render(<Dashboard />);
+
+  await waitFor(() => {
+    expect(screen.getByText('Dashboard')).toBeInTheDocument();
+  });
+
+  expect(screen.getByText('10')).toBeInTheDocument(); // vehicles
+  expect(screen.getByText('5')).toBeInTheDocument();  // drivers
+  expect(screen.getByText('20')).toBeInTheDocument(); // trips
+});
