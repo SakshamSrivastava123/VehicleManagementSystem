@@ -82,3 +82,18 @@ test('should render active trips list', async () => {
   expect(screen.getByText('ABC123')).toBeInTheDocument();
   expect(screen.getByText('John')).toBeInTheDocument();
 });
+
+test('should show empty state when no trips', async () => {
+  vehicleAPI.getStats.mockResolvedValue({ data: {} });
+  driverAPI.getStats.mockResolvedValue({ data: {} });
+  tripAPI.getStats.mockResolvedValue({ data: {} });
+
+  tripAPI.getAll.mockResolvedValue({ data: [] });
+  maintenanceAPI.getAll.mockResolvedValue({ data: [] });
+
+  render(<Dashboard />);
+
+  await waitFor(() => {
+    expect(screen.getByText(/no active trips/i)).toBeInTheDocument();
+  });
+});
