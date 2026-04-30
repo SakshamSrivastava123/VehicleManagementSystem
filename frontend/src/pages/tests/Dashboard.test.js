@@ -52,3 +52,33 @@ test('should render dashboard stats correctly', async () => {
   expect(screen.getByText('5')).toBeInTheDocument();  // drivers
   expect(screen.getByText('20')).toBeInTheDocument(); // trips
 });
+
+test('should render active trips list', async () => {
+  vehicleAPI.getStats.mockResolvedValue({ data: {} });
+  driverAPI.getStats.mockResolvedValue({ data: {} });
+  tripAPI.getStats.mockResolvedValue({ data: {} });
+
+  tripAPI.getAll.mockResolvedValue({
+    data: [
+      {
+        _id: '1',
+        startLocation: 'Delhi',
+        endLocation: 'Noida',
+        vehicle: { registrationNumber: 'ABC123' },
+        driver: { name: 'John' },
+      },
+    ],
+  });
+
+  maintenanceAPI.getAll.mockResolvedValue({ data: [] });
+
+  render(<Dashboard />);
+
+  await waitFor(() => {
+    expect(screen.getByText('Delhi')).toBeInTheDocument();
+  });
+
+  expect(screen.getByText('Noida')).toBeInTheDocument();
+  expect(screen.getByText('ABC123')).toBeInTheDocument();
+  expect(screen.getByText('John')).toBeInTheDocument();
+});
