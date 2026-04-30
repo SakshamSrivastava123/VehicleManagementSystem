@@ -97,3 +97,18 @@ test('should show empty state when no trips', async () => {
     expect(screen.getByText(/no active trips/i)).toBeInTheDocument();
   });
 });
+
+test('should show empty state when no trips', async () => {
+  vehicleAPI.getStats.mockResolvedValue({ data: {} });
+  driverAPI.getStats.mockResolvedValue({ data: {} });
+  tripAPI.getStats.mockResolvedValue({ data: {} });
+
+  tripAPI.getAll.mockResolvedValue({ data: [] });
+  maintenanceAPI.getAll.mockResolvedValue({ data: [] });
+
+  render(<Dashboard />);
+
+  await waitFor(() => {
+    expect(screen.getByText(/no active trips/i)).toBeInTheDocument();
+  });
+});
